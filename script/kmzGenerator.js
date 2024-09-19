@@ -8,8 +8,16 @@ function generateKMZ() {
   const reader = new FileReader();
 
   reader.onload = async function(event) {
-    const geoJSON = JSON.parse(event.target.result);
-
+    let geoJSON;
+    try {
+      geoJSON = JSON.parse(event.target.result);
+      if (!geoJSON.features) throw new Error("Invalid GeoJSON file");
+    } catch (error) {
+      document.getElementById("errorMessage").textContent = "Invalid GeoJSON file. Please upload a valid file.";
+      document.getElementById("errorMessage").style.display = "block";
+      return;
+    }
+    
     geoJSON.features.forEach(feature => {
       const properties = feature.properties;
       const { date, google_maps_url, location } = properties;

@@ -73,12 +73,12 @@
         color: #555; 
     }
 
-    a {
+    p a {
         color: #007bff;
         text-decoration: none;
     }
 
-    a:hover {
+    p a:hover {
         color: #0056b3;
         text-decoration: underline; 
     }
@@ -122,6 +122,11 @@
         background-color: #0056b3;
     }
 
+    #errorMessage {
+        text-align: center;
+        color: red;
+        display: none;
+    }
     #downloadLink {
         margin-top: 20px;
         background-color: rgb(156, 73, 156);
@@ -134,6 +139,10 @@
 
         .btn {
             background-color: #616161;
+        }
+
+        .btn:hover {
+            background-color: #424242;
         }
     }
 </style>
@@ -154,6 +163,8 @@
             <input type="file" id="json" name="json"><br>
             <button type="button" class="btn" id="generateBtn" onclick="generateKMZ()" disabled>Generate KMZ</button>
         </form>
+
+        <p id="errorMessage"></p>
 
         <a id="downloadLink" class="btn" style="display:none;">Download KMZ</a>
     </div>
