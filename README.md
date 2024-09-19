@@ -1,4 +1,4 @@
-# Google Saved Places to Organic Maps
+# Convert Google Maps saved places to Organic Maps
 
 ![logo](logo.jpg)
 
@@ -10,4 +10,4 @@ https://rudokemper.github.io/google-maps-places-to-organic-maps/
 
 ## Credits
 
-This project uses the `tokml` library from [Mapbox](https://github.com/mapbox/tokml).
+This project uses the `tokml` library from [Mapbox](https://github.com/mapbox/tokml), and the `togpx` library from [tyrasd](https://github.com/tyrasd/togpx).

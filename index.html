@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convert Google Maps saved places to Organic Maps</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="script/vendor/tokml.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script/vendor/tokml.js"></script>
+    <script src="script/vendor/togpx.js"></script>
+    <script src="script/main.js"></script>
     <link rel="icon" href="./assets/favicon.ico">
 </head>
 <style>
@@ -127,7 +129,7 @@
         color: red;
         display: none;
     }
-    #downloadLink {
+    .downloadLink {
         margin-top: 20px;
         background-color: rgb(156, 73, 156);
     }
@@ -155,18 +157,19 @@
             <img src="assets/organicmaps.png" alt="Organic Maps logo">
         </div>
         <h1>Convert Google Maps saved places to Organic Maps</h1>
-        <p>Generate a KMZ file from your Google Maps saved places to import as bookmarks in <a href="https://organicmaps.app/" target="_blank">Organic Maps</a>. This tool generates everything locally in your browser and does not upload any data.</p>
+        <p>Generate GPX and KMZ files from your Google Maps saved places to import as bookmarks in <a href="https://organicmaps.app/" target="_blank">Organic Maps</a>, or use anywhere you'd like. This tool generates everything locally in your browser and does not upload any data.</p>
         <p>You can retrieve a <code>Saved Places.json</code> file by navigating to "Your data in Maps" in your Google Account settings or by accessing <a href="https://myaccount.google.com/yourdata/maps" target="_blank">this page</a>, then pressing "Download your Maps data."</p>
         <p>Read about why Organic Maps is <a href="https://news.itsfoss.com/organic-maps/" target="_blank">the open-source offline map you need to ditch Google Maps</a>.</p>
         <form id="kmlForm" class="form-group">
             <label for="json">Select <code>Saved Places.json</code></label>
             <input type="file" id="json" name="json"><br>
-            <button type="button" class="btn" id="generateBtn" onclick="generateKMZ()" disabled>Generate KMZ</button>
+            <button type="button" class="btn" id="generateBtn" onclick="generateFiles()" disabled>Generate Files</button>
         </form>
 
         <p id="errorMessage"></p>
 
-        <a id="downloadLink" class="btn" style="display:none;">Download KMZ</a>
+        <a id="downloadGpxLink" class="downloadLink btn" style="display:none;">Download GPX</a>
+        <a id="downloadKmzLink" class="downloadLink btn" style="display:none;">Download KMZ</a>
     </div>
     <div class="github">
         <a href="https://github.com/rudokemper/google-maps-places-to-organic-maps" class="btn" target="_blank">
@@ -178,7 +181,6 @@
             document.getElementById('generateBtn').disabled = !this.files.length;
         });
     </script>
-    <script src="script/kmzGenerator.js"></script>
 </body>
 
 </html>
