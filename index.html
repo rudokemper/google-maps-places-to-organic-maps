@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Saved Places to Organic Maps</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="script/vendor/tokml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="icon" href="./assets/favicon.ico">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 85%;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            margin-top: 15px;
+        }
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .logo-container img {
+        width: 30%;
+    }
+
+    .logo-container .arrow {
+        font-size: 10em;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    textarea,
+    input[type="file"] {
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    .btn:not(:disabled):hover {
+        background-color: #0056b3;
+    }
+
+    #downloadLink {
+        margin-top: 20px;
+        background-color: rgb(156, 73, 156);
+    }
+
+    .github {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        .btn {
+            background-color: #616161;
+        }
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="assets/googlemaps.png" alt="Google Maps logo">
+            <span class="arrow">→</span>
+            <img src="assets/organicmaps.png" alt="Organic Maps logo">
+        </div>
+        <h1>Convert Google Maps saved places to Organic Maps</h1>
+        <p style="text-align: center;">
+            Generate a KMZ file from your Google Maps saved places to import as bookmarks in Organic Maps.
+        </p>
+        <p style="text-align: center;">
+            You can retrieve a  <code>Saved Places.json</code> file by navigating to "Your data in Maps" in your Google Account settings, then pressing "Download your Maps data.""
+        </p>
+        <form id="kmlForm" class="form-group">
+            <label for="json">Upload <code>Saved Places.json</code></label>
+            <input type="file" id="json" name="json"><br>
+            <button type="button" class="btn" id="generateBtn" onclick="generateKMZ()" disabled>Generate KMZ</button>
+        </form>
+
+        <a id="downloadLink" class="btn" style="display:none;">Download KMZ</a>
+    </div>
+    <div class="github">
+        <a href="https://github.com/rudokemper/google-maps-places-to-organic-maps" class="btn" target="_blank">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+    </div>
+    <script>
+        document.getElementById('json').addEventListener('change', function () {
+            document.getElementById('generateBtn').disabled = !this.files.length;
+        });
+    </script>
+    <script src="script/kmzGenerator.js"></script>
+</body>
+
+</html>
