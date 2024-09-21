@@ -22,7 +22,7 @@ function processGeoJSONFeatures(geoJSON) {
       let long = parseFloat(coordinates[1]);
       let lat = parseFloat(coordinates[0]);
       console.log("Coordinates found: ", long, lat);
-      feature.geometry.coordinates = [lat, long];
+      feature.geometry.coordinates = [long, lat];
     }
 
 
