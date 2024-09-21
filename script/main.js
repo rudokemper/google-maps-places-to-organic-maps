@@ -12,14 +12,17 @@ function processGeoJSONFeatures(geoJSON) {
 
     //check if the geometry is a null island
     if (feature.geometry.coordinates[0] === 0 && feature.geometry.coordinates[1] === 0) {
-      console.log("Null island found, trying to get coordinates from google maps url");
+      console.log("Null island found, trying to get coordinates from google maps url: ", google_maps_url);
 
       // parse the google maps url to get the coordinates
       const url = new URL(google_maps_url);
       const searchParams = new URLSearchParams(url.search);
       const q = searchParams.get("q");
       const coordinates = q.split(",");//.split("@")[1]
-      feature.geometry.coordinates = [parseFloat(coordinates[0]), parseFloat(coordinates[1])];
+      let long = parseFloat(coordinates[1]);
+      let lat = parseFloat(coordinates[0]);
+      console.log("Coordinates found: ", long, lat);
+      feature.geometry.coordinates = [lat, long];
     }
 
 
