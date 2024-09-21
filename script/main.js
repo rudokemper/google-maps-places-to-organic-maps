@@ -70,7 +70,19 @@ async function findLocationInURL(feature) {
     let long, lat = coordinates;
     console.log("Coordinates found: ", long, lat);
     feature.geometry.coordinates = [long, lat];
-  } 
+  } else {
+    // this is likely a place name or address
+    console.log("Place name or address found: ", q);
+    // detect if this is likely to be an address
+    console.log("stripped place name", q.trim());
+    let address = q.trim();
+    //set the address and create any intermediate objects
+    if (!feature.properties.location) {
+      feature.properties.location = {};
+    }
+    feature.properties.location.address = address
+   
+  }
 
   return feature;
 }
