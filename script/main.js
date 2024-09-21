@@ -3,6 +3,26 @@ function convertTimestamp(timestamp) {
   return date.toLocaleString();
 }
 
+function parseCoordinates(string) {
+  // determine if a string is likely to be coordinates
+  // if it is, return the coordinates as an array, if not return undefined
+  let isCoordinates = true;
+
+  let parts = string.split(",")
+  // coordinates should have 2 parts
+  if (parts.length !== 2) {
+    isCoordinates = false;
+  }
+  // if any of the parts cant parse to a float, then its not coordinates
+  if (parts.some((coord) => isNaN(parseFloat(coord)))) {
+    isCoordinates = false;
+  }
+
+  if (isCoordinates) {
+    return parts.map(parseFloat);
+  }
+}
+
 function processGeoJSONFeatures(geoJSON) {
   geoJSON.features.forEach((feature) => {
     const properties = feature.properties;
