@@ -87,6 +87,13 @@ async function findLocationInURL(feature) {
   return feature;
 }
 
+/**
+ * The findLocationInURL function may not be able to find the coordinates in the URL. Sometimes it may only find the address.
+ * This function will attempt to look up the coordinates for the address in the location field if the coordinates are still missing (i.e. null island).
+ *
+ * @param {*} feature the feature to process
+ * @returns the feature, modified if necessary
+ */
 async function lookupMissingCoordsWithAddress(feature) {
 
   const properties = feature.properties;
