@@ -9,6 +9,20 @@ function processGeoJSONFeatures(geoJSON) {
     const { date, google_maps_url, location } = properties;
     let { address, name, Comment: comment } = location || {};
 
+
+    //check if the geometry is a null island
+    if (feature.geometry.coordinates[0] === 0 && feature.geometry.coordinates[1] === 0) {
+      console.log("Null island found, trying to get coordinates from google maps url");
+
+      // parse the google maps url to get the coordinates
+      const url = new URL(google_maps_url);
+      const searchParams = new URLSearchParams(url.search);
+      const q = searchParams.get("q");
+      const coordinates = q.split(",");//.split("@")[1]
+      feature.geometry.coordinates = [parseFloat(coordinates[0]), parseFloat(coordinates[1])];
+    }
+
+
     // If name is not available, use address or coordinates
     properties.name =
       name ||
