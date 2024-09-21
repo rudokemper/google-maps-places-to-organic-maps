@@ -92,15 +92,21 @@ async function findLocationInURL(feature) {
  * This function will attempt to look up the coordinates for the address in the location field if the coordinates are still missing (i.e. null island).
  *
  * @param {*} feature the feature to process
+ * @param {*} userConsent whether the user has given consent to geocode the address
  * @returns the feature, modified if necessary
  */
-async function lookupMissingCoordsWithAddress(feature) {
+async function lookupMissingCoordsWithAddress(feature, userConsent) {
 
   const properties = feature.properties;
   const { date, google_maps_url, location } = properties;
   let { address, name, Comment: comment } = location || {};
 
-  console.log(feature.geometry.coordinates);  
+  console.log(feature.geometry.coordinates); 
+  
+  if (!userConsent) {
+    console.log("User has not given consent to geocode address, skipping");
+    return feature;
+  }
 
   if (feature.geometry.coordinates[0] !== 0 || feature.geometry.coordinates[1] !== 0) {
     console.log("coordinates are present. skipping address lookup");
@@ -201,9 +207,11 @@ function generateFiles() {
     let itemsToProcess = geoJSON.features.length;
     let itemsProcessed = 0;
 
+    const userGeoCodeConsent = document.getElementById("addressGeocodeOptIn").checked;
+
     tasks = geoJSON.features.map(async (feature) => {
         feature = await findLocationInURL(feature);
-        feature = await lookupMissingCoordsWithAddress(feature);
+        feature = await lookupMissingCoordsWithAddress(feature, userGeoCodeConsent);
         feature = await processGeoJSONFeature(feature);
         itemsProcessed++;
         showProgressToUser(
