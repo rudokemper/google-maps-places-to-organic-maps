@@ -67,9 +67,7 @@ function fixupNullIslandCoordinates(feature) {
 
 function processGeoJSONFeatures(geoJSON) {
   geoJSON.features.forEach((feature) => {
-
-    feature = fixupNullIslandCoordinates(feature);
-
+    
     const properties = feature.properties;
     const { date, google_maps_url, location } = properties;
     let { address, name, Comment: comment } = location || {};
