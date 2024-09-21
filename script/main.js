@@ -6,21 +6,18 @@ function convertTimestamp(timestamp) {
 function parseCoordinates(string) {
   // determine if a string is likely to be coordinates
   // if it is, return the coordinates as an array, if not return undefined
-  let isCoordinates = true;
-
   let parts = string.split(",")
+
   // coordinates should have 2 parts
   if (parts.length !== 2) {
-    isCoordinates = false;
+    return [false, false];
   }
   // if any of the parts cant parse to a float, then its not coordinates
-  if (parts.some((coord) => isNaN(parseFloat(coord)))) {
-    isCoordinates = false;
+  if (parts.some((coord) => isNaN(parseFloat(coord.trim())))) {
+    return [false, false];
   }
 
-  if (isCoordinates) {
-    return parts.map(parseFloat);
-  }
+  return parts.map(parseFloat)
 }
 
 /**
@@ -64,10 +61,9 @@ async function findLocationInURL(feature) {
     return feature;
   }
   
-  const coordinates = parseCoordinates(q);
-  if (coordinates) {
+  let [long, lat] = parseCoordinates(q);
+  if (long && lat) {
     // this is likely coordinates
-    let long, lat = coordinates;
     console.log("Coordinates found: ", long, lat);
     feature.geometry.coordinates = [long, lat];
   } else {
