@@ -38,11 +38,18 @@ function processGeoJSONFeatures(geoJSON) {
       const url = new URL(google_maps_url);
       const searchParams = new URLSearchParams(url.search);
       const q = searchParams.get("q");
-      const coordinates = q.split(",");//.split("@")[1]
-      let long = parseFloat(coordinates[1]);
-      let lat = parseFloat(coordinates[0]);
-      console.log("Coordinates found: ", long, lat);
-      feature.geometry.coordinates = [long, lat];
+
+      if (!q) {
+        console.log("No coordinates found in google maps url, skipping");
+        // the q param isnt present, it likely contains the cid param instead, which might mean that the location is a business, but effectively menas that the properties.location field and the coordinates are already present in the data
+      } else {
+        // this is likely coordinates
+        const coordinates = q.split(",");//.split("@")[1]
+        let long = parseFloat(coordinates[1]);
+        let lat = parseFloat(coordinates[0]);
+        console.log("Coordinates found: ", long, lat);
+        feature.geometry.coordinates = [long, lat];
+      } 
     }
 
 
