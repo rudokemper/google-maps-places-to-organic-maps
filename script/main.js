@@ -181,6 +181,7 @@ function processGeoJSONFeature(feature) {
 }
 
 function showErrorToUser(message) {
+  console.error(message);
   document.getElementById("errorMessage").textContent = message;
   document.getElementById("errorMessage").style.display = "block";
 }
