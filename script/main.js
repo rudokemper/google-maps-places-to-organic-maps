@@ -65,37 +65,36 @@ function fixupNullIslandCoordinates(feature) {
   return feature;
 }
 
-function processGeoJSONFeatures(geoJSON) {
-  geoJSON.features.forEach((feature) => {
-    
-    const properties = feature.properties;
-    const { date, google_maps_url, location } = properties;
-    let { address, name, Comment: comment } = location || {};
+function processGeoJSONFeature(feature) {
+
+  const properties = feature.properties;
+  const { date, google_maps_url, location } = properties;
+  let { address, name, Comment: comment } = location || {};
 
 
-    // If name is not available, use address or coordinates
-    properties.name =
-      name ||
-      address ||
-      (feature.geometry && feature.geometry.coordinates.join(", "));
+  // If name is not available, use address or coordinates
+  properties.name =
+    name ||
+    address ||
+    (feature.geometry && feature.geometry.coordinates.join(", "));
 
-    if (address) properties.address = address;
+  if (address) properties.address = address;
 
-    // Add additional Google Maps data to the description
-    properties.description = "";
-    if (address) properties.description = `<b>Address:</b> ${address}<br>`;
-    if (date)
-      properties.description += `<b>Date bookmarked:</b> ${convertTimestamp(
-        date
-      )}<br>`;
-    if (comment) properties.description += `<b>Comment:</b> ${comment}<br>`;
-    if (google_maps_url)
-      properties.description += `<b>Google Maps URL:</b> <a href="${google_maps_url}">${google_maps_url}</a><br>`;
+  // Add additional Google Maps data to the description
+  properties.description = "";
+  if (address) properties.description = `<b>Address:</b> ${address}<br>`;
+  if (date)
+    properties.description += `<b>Date bookmarked:</b> ${convertTimestamp(
+      date
+    )}<br>`;
+  if (comment) properties.description += `<b>Comment:</b> ${comment}<br>`;
+  if (google_maps_url)
+    properties.description += `<b>Google Maps URL:</b> <a href="${google_maps_url}">${google_maps_url}</a><br>`;
 
-    delete properties.location;
-    delete properties.date;
-    delete properties.google_maps_url;
-  });
+  delete properties.location;
+  delete properties.date;
+  delete properties.google_maps_url;
+  return feature;
 }
 
 function generateFiles() {
@@ -114,7 +113,12 @@ function generateFiles() {
       return;
     }
 
-    processGeoJSONFeatures(geoJSON);
+    geoJSON.features = await Promise.all(
+      geoJSON.features.map(async (feature) => {
+        feature = await processGeoJSONFeature(feature);
+        return feature;
+      })
+    );
 
     const gpx = togpx(geoJSON);
     const kml = tokml(geoJSON);
