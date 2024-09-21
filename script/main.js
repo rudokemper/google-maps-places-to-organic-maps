@@ -198,14 +198,28 @@ function generateFiles() {
       return;
     }
 
-    geoJSON.features = await Promise.all(
-      geoJSON.features.map(async (feature) => {
+    let itemsToProcess = geoJSON.features.length;
+    let itemsProcessed = 0;
+
+    tasks = geoJSON.features.map(async (feature) => {
         feature = await findLocationInURL(feature);
         feature = await lookupMissingCoordsWithAddress(feature);
         feature = await processGeoJSONFeature(feature);
+        itemsProcessed++;
+        showProgressToUser(
+          `Processing ${itemsProcessed} of ${itemsToProcess} places...`
+        );
         return feature;
       })
-    );
+    
+    geoJSON.features = await Promise.all(tasks)
+      .then( (feature) => {
+        document.getElementById("progress").style.display = "none";
+        return feature;
+      })
+      .catch((error) => { 
+        showErrorToUser("An error occurred while processing the data: "+ error);
+      });
 
     const gpx = togpx(geoJSON);
     const kml = tokml(geoJSON);
