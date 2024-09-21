@@ -179,6 +179,11 @@ function showErrorToUser(message) {
   document.getElementById("errorMessage").style.display = "block";
 }
 
+function showProgressToUser(message) {
+  document.getElementById("progress").textContent = message;
+  document.getElementById("progress").style.display = "block";
+}
+
 function generateFiles() {
   const geoJSONFile = document.getElementById("json").files[0];
   const reader = new FileReader();
