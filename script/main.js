@@ -174,6 +174,11 @@ function processGeoJSONFeature(feature) {
   return feature;
 }
 
+function showErrorToUser(message) {
+  document.getElementById("errorMessage").textContent = message;
+  document.getElementById("errorMessage").style.display = "block";
+}
+
 function generateFiles() {
   const geoJSONFile = document.getElementById("json").files[0];
   const reader = new FileReader();
@@ -184,9 +189,7 @@ function generateFiles() {
       geoJSON = JSON.parse(event.target.result);
       if (!geoJSON.features) throw new Error("Invalid GeoJSON file");
     } catch (error) {
-      document.getElementById("errorMessage").textContent =
-        "Invalid GeoJSON file. Please upload a valid file.";
-      document.getElementById("errorMessage").style.display = "block";
+      showErrorToUser("Invalid GeoJSON file. Please upload a valid file.");
       return;
     }
 
