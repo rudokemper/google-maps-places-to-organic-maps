@@ -23,8 +23,18 @@ function parseCoordinates(string) {
   }
 }
 
-
-function fixupNullIslandCoordinates(feature) {
+/**
+ *  Attempt to detect the location from the google maps url of the feature
+ * 
+ * if the coordinates are detected as null island, try to get the coordinates from the google maps url.
+ * if the google maps url contains an address, populate the address field
+ * 
+ * if coordinates are already present, return the feature as is
+ *
+ * @param {*} feature the feature to process
+ * @returns the feature, moodified if necessary
+ */
+async function findLocationInURL(feature) {
 
   //if there isnt a null island, return the feature as is
   if (feature.geometry.coordinates[0] !== 0 || feature.geometry.coordinates[1] !== 0) {
