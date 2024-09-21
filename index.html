@@ -160,6 +160,17 @@
         <p>Generate GPX and KMZ files from your Google Maps saved places to import as bookmarks in <a href="https://organicmaps.app/" target="_blank">Organic Maps</a>, or use anywhere you'd like. This tool generates everything locally in your browser and does not upload any data.</p>
         <p>You can retrieve a <code>Saved Places.json</code> file by navigating to "Your data in Maps" in your Google Account settings or by accessing <a href="https://myaccount.google.com/yourdata/maps" target="_blank">this page</a>, then pressing "Download your Maps data."</p>
         <p>Read about why Organic Maps is <a href="https://news.itsfoss.com/organic-maps/" target="_blank">the open-source offline map you need to ditch Google Maps</a>.</p>
+        <p>
+            The Google export may not provide latitude and longitude for every location (see <a href="https://github.com/rudokemper/google-maps-places-to-organic-maps/issues/2">Issue #2</a>). If the coordinates cannot be found within the data, you can opt-in to have the tool attempt to look up locations from addresses.
+        </p>
+        <p>
+            <label>
+                <input type="checkbox" id="addressGeocodeOptIn" name="addressGeocodeOptIn" value="consent">
+            
+                Attempt to look up locations from addresses using <a href="https://nominatim.openstreetmap.org" target="_blank">OSM Nominatim</a> for geocoding
+            </label>
+        </p>
+
         <form id="kmlForm" class="form-group">
             <label for="json">Select <code>Saved Places.json</code></label>
             <input type="file" id="json" name="json"><br>
