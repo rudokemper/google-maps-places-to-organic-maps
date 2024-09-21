@@ -23,34 +23,56 @@ function parseCoordinates(string) {
   }
 }
 
+
+function fixupNullIslandCoordinates(feature) {
+
+  //if there isnt a null island, return the feature as is
+  if (feature.geometry.coordinates[0] !== 0 || feature.geometry.coordinates[1] !== 0) {
+    return feature;
+  }
+
+  // create a copy of the feature so we don't modify the original
+  feature = JSON.parse(JSON.stringify(feature));
+
+  const properties = feature.properties;
+  const { date, google_maps_url, location } = properties;
+  let { address, name, Comment: comment } = location || {};
+
+
+  console.log("Null island found, trying to get coordinates from google maps url: ", google_maps_url);
+
+  // parse the google maps url to get the coordinates
+  const url = new URL(google_maps_url);
+  const searchParams = new URLSearchParams(url.search);
+  const q = searchParams.get("q");
+
+  console.log("q", q);
+
+  if (!q) {
+    console.log("No coordinates found in google maps url, skipping");
+    // the q param isnt present, it likely contains the cid param instead, which might mean that the location is a business, but effectively menas that the properties.location field and the coordinates are already present in the data
+    return feature;
+  }
+  
+  const coordinates = parseCoordinates(q);
+  if (coordinates) {
+    // this is likely coordinates
+    let long, lat = coordinates;
+    console.log("Coordinates found: ", long, lat);
+    feature.geometry.coordinates = [long, lat];
+  } 
+
+  return feature;
+}
+
 function processGeoJSONFeatures(geoJSON) {
   geoJSON.features.forEach((feature) => {
+
+    feature = fixupNullIslandCoordinates(feature);
+
     const properties = feature.properties;
     const { date, google_maps_url, location } = properties;
     let { address, name, Comment: comment } = location || {};
-
-
-    //check if the geometry is a null island
-    if (feature.geometry.coordinates[0] === 0 && feature.geometry.coordinates[1] === 0) {
-      console.log("Null island found, trying to get coordinates from google maps url: ", google_maps_url);
-
-      // parse the google maps url to get the coordinates
-      const url = new URL(google_maps_url);
-      const searchParams = new URLSearchParams(url.search);
-      const q = searchParams.get("q");
-
-      if (!q) {
-        console.log("No coordinates found in google maps url, skipping");
-        // the q param isnt present, it likely contains the cid param instead, which might mean that the location is a business, but effectively menas that the properties.location field and the coordinates are already present in the data
-      } else {
-        // this is likely coordinates
-        const coordinates = q.split(",");//.split("@")[1]
-        let long = parseFloat(coordinates[1]);
-        let lat = parseFloat(coordinates[0]);
-        console.log("Coordinates found: ", long, lat);
-        feature.geometry.coordinates = [long, lat];
-      } 
-    }
 
 
     // If name is not available, use address or coordinates
