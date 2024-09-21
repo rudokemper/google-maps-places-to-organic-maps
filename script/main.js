@@ -87,6 +87,31 @@ async function findLocationInURL(feature) {
   return feature;
 }
 
+async function lookupMissingCoordsWithAddress(feature) {
+
+  const properties = feature.properties;
+  const { date, google_maps_url, location } = properties;
+  let { address, name, Comment: comment } = location || {};
+
+  console.log(feature.geometry.coordinates);  
+
+  if (feature.geometry.coordinates[0] !== 0 || feature.geometry.coordinates[1] !== 0) {
+    console.log("coordinates are present. skipping address lookup");
+    return feature;
+  }
+  console.log(address)
+  if (!address) {
+    console.log("No address found, skipping");
+    return feature;
+  }
+
+  let coords = await addressToCoordinates(address);
+  console.log("Coordinates looked up: ", coords);
+  feature.geometry.coordinates = coords;
+  return feature;
+}
+
+
 
 async function addressToCoordinates(address) {
   return new Promise((resolve, reject) => {
@@ -161,6 +186,7 @@ function generateFiles() {
     geoJSON.features = await Promise.all(
       geoJSON.features.map(async (feature) => {
         feature = await findLocationInURL(feature);
+        feature = await lookupMissingCoordsWithAddress(feature);
         feature = await processGeoJSONFeature(feature);
         return feature;
       })
