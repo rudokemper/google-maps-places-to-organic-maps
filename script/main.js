@@ -87,6 +87,29 @@ async function findLocationInURL(feature) {
   return feature;
 }
 
+
+async function addressToCoordinates(address) {
+  return new Promise((resolve, reject) => {
+    fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${address.replace(" ", "+")}&polygon=1&addressdetails=1`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length === 0) {
+          reject("No results found");
+        } else {
+          // TODO: we should also possibly return the name of the place
+          const { lat, lon } = data[0];
+          resolve([lon, lat]);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+}
+
 function processGeoJSONFeature(feature) {
 
   const properties = feature.properties;
