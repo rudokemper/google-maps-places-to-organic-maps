@@ -125,6 +125,7 @@ function generateFiles() {
 
     geoJSON.features = await Promise.all(
       geoJSON.features.map(async (feature) => {
+        feature = await findLocationInURL(feature);
         feature = await processGeoJSONFeature(feature);
         return feature;
       })
